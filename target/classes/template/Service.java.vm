@@ -1,0 +1,38 @@
+package ${package}.${moduleName}.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.common.domain.PageObjects;
+
+import java.util.Map;
+import java.util.List;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+public interface ${className}Service extends IService<${className}Entity> {
+
+    /**
+     * @description: 分页查询
+     * @author ${author}
+     * @date ${datetime}
+     * @param params page args
+     * @return PageObjects<${className}Entity>
+     **/
+    PageObjects<${className}Entity> queryPage(Map<String, Object> params);
+
+
+    /**
+     * @description: Excel导出集合
+     * @author ${author}
+     * @date ${datetime}
+     * @param params page args
+     * @return List<${className}Entity>
+     **/
+    List<${className}Entity> listByCondition(Map<String, Object> params);
+}
+
