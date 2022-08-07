@@ -25,9 +25,16 @@ public interface DBConstant {
      * postgresql
      */
     String POSTGRESQL = "postgresql";
+
     /**
      * sqlite
      */
     String SQLITE = "sqlite";
+
+
+    /**
+     * error
+     */
+    String ERROR = "error";
 
 }

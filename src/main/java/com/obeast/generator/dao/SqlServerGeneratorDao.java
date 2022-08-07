@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @description: SQLServer代码生成器
  **/
 @Mapper
-public interface SQLServerGeneratorDao extends GeneratorDao {
+public interface SqlServerGeneratorDao extends GeneratorDao {
 
 }

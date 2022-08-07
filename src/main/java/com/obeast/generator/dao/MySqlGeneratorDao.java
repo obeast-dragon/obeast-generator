@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @description: mysql代码生成器
  **/
 @Mapper
-public interface MySQLGeneratorDao extends GeneratorDao {
+public interface MySqlGeneratorDao extends GeneratorDao {
 
 
 }

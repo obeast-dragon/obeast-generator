@@ -26,7 +26,7 @@ public class ${className}Excel {
 @ExcelIgnore
     #end
 @ExcelProperty(value = "$!column.comments")
-private $column.attrType $column.attrname;
+    private $column.attrType $column.attrname;
 #end
 
 }

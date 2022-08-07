@@ -7,6 +7,7 @@ import ${package}.common.api.R;
 import ${package}.common.constant.PageConstant;
 import ${package}.common.domain.PageObjects;
 import com.worldintek.common.utils.EasyExcelUtils;
+import com.worldintek.common.utils.ClassConvertUtils;
 import com.worldintek.common.validation.group.AddGroup;
 import com.worldintek.common.validation.group.DefaultGroup;
 import com.worldintek.common.validation.group.UpdateGroup;
@@ -127,8 +128,8 @@ public class ${className}Controller {
         }
         List<${className}Entity> temp = ${classname}Service.listByCondition(params);
         List<${className}Excel> excels = ClassConvertUtils.sourceToTarget(temp, ${className}Excel.class);
-        EasyExcelUtils<${className}Excel> easyExcel = new EasyExcelUtils<${className}Excel>(.class);
-        easyExcel.exportExcel(response, list, sheetName, fileName);
+        EasyExcelUtils<${className}Excel> easyExcel = new EasyExcelUtils<>(${className}Excel.class);
+        easyExcel.exportExcel(response, excels, sheetName, fileName);
     }
 
 

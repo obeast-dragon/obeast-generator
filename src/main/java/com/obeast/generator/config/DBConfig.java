@@ -2,6 +2,7 @@ package com.obeast.generator.config;
 
 import com.obeast.generator.constant.DBConstant;
 import com.obeast.generator.dao.*;
+import com.obeast.generator.strategy.StrategyDBFactory;
 import com.obeast.generator.utils.BeastException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,28 +23,15 @@ public class DBConfig {
     private String database;
 
     @Autowired
-    private MySQLGeneratorDao mySQLGeneratorDao;
-    @Autowired
-    private OracleGeneratorDao oracleGeneratorDao;
-    @Autowired
-    private SQLServerGeneratorDao sqlServerGeneratorDao;
-    @Autowired
-    private PostgreSQLGeneratorDao postgreSQLGeneratorDao;
+    private StrategyDBFactory strategyDbFactory;
 
     @Bean
     @Primary
     public GeneratorDao getGeneratorDao(){
-        if(DBConstant.MYSQL.equalsIgnoreCase(database)){
-            return mySQLGeneratorDao;
-        }else if(DBConstant.ORACLE.equalsIgnoreCase(database)){
-            return oracleGeneratorDao;
-        }else if(DBConstant.SQLSERVER.equalsIgnoreCase(database)){
-            return sqlServerGeneratorDao;
-        }else if(DBConstant.POSTGRESQL.equalsIgnoreCase(database)){
-            return postgreSQLGeneratorDao;
-        }else {
-            throw new BeastException("不支持当前数据库：" + database);
-        }
+        return strategyDbFactory.getStrategyDBName(database).getGeneratorDao();
+    }
+    public String getDatabase() {
+        return database;
     }
 
 }

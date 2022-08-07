@@ -28,7 +28,7 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
         String key = (String) params.get("orderField");
         QueryWrapper<${className}Entity> queryWrapper = new QueryWrapper<${className}Entity>();
         IPage<${className}Entity> page = this.page(
-                new PageQueryUtils<EquipEntity>().getPage(params, key, false),
+                new PageQueryUtils<${className}Entity>().getPage(params, key, false),
                 queryWrapper
         );
         return new PageQueryUtils<>().getPageObjects(page, ${className}Entity.class);

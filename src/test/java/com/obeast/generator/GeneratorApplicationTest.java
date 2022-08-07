@@ -1,6 +1,8 @@
 package com.obeast.generator;
 
 import com.obeast.generator.config.DBConfig;
+import com.obeast.generator.strategy.StrategyDBFactory;
+import com.obeast.generator.strategy.StrategyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +17,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class GeneratorApplicationTest {
 
     @Autowired
-    DBConfig dbConfig;
+    private DBConfig config;
 
+    @Autowired
+    StrategyDBFactory strategyDBFactory;
 
     @Test
     void test() {
+//        String database = config.getDatabase();
+        StrategyService strategyDBName = strategyDBFactory.getStrategyDBName("21221");
+        System.out.println(strategyDBName.getGeneratorDao().getClass());
+
     }
 }
