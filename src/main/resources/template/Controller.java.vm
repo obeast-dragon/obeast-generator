@@ -55,9 +55,9 @@ public class ${className}Controller {
             @Parameter(name = PageConstant.CUR, description = "当前页码，从1开始", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = Integer.class)),
             @Parameter(name = PageConstant.LIMIT, description = "每页显示记录数", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = Integer.class)),
             @Parameter(name = PageConstant.ORDER_FIELD, description = "排序字段", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class)),
-            @Parameter(name = PageConstant.ORDER, description = "排序方式，可选值(asc、desc)", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = String.class))
+            @Parameter(name = PageConstant.ORDER, description = "排序方式", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = String.class), example = "asc或者desc")
     })
-    public R<PageObjects<${className}Entity>> list(@RequestParam("params") Map<String, Object> params) {
+    public R<PageObjects<${className}Entity>> list(@RequestParam Map<String, Object> params) {
         if (params == null) {
             return R.error("params is null please input args");
         }
