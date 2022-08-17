@@ -1,13 +1,9 @@
 package ${package}.${moduleName}.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import ${package}.common.api.R;
 import ${package}.common.constant.PageConstant;
 import ${package}.common.domain.PageObjects;
 import com.worldintek.common.utils.EasyExcelUtils;
-import com.worldintek.common.utils.ClassConvertUtils;
 import com.worldintek.common.validation.group.AddGroup;
 import com.worldintek.common.validation.group.DefaultGroup;
 import com.worldintek.common.validation.group.UpdateGroup;
@@ -23,23 +19,24 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import ${package}.${moduleName}.Entity.${className}Entity;
-import ${package}.${moduleName}.Excel.${className}Excel;
+import java.util.List;
+import java.util.Map;
+
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.excel.${className}Excel;
 import ${package}.${moduleName}.service.${className}Service;
 
 import javax.servlet.http.HttpServletResponse;
 
 
-
 /**
- * ${comments}
- *
  * @author ${author}
- * @email ${email}
- * @date ${datetime}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 @RestController
-@RequestMapping("${moduleName}/${pathName}")
+@RequestMapping("/${moduleName}/${pathName}")
 @Tag(name = "${comments}接口")
 public class ${className}Controller {
 
@@ -55,11 +52,11 @@ public class ${className}Controller {
             @Parameter(name = PageConstant.CUR, description = "当前页码，从1开始", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = Integer.class)),
             @Parameter(name = PageConstant.LIMIT, description = "每页显示记录数", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = Integer.class)),
             @Parameter(name = PageConstant.ORDER_FIELD, description = "排序字段", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class)),
-            @Parameter(name = PageConstant.ORDER, description = "排序方式", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = String.class), example = "asc或者desc")
+            @Parameter(name = PageConstant.ORDER, description = "排序方式，可选值(asc、desc)", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = String.class))
     })
     public R<PageObjects<${className}Entity>> list(@RequestParam Map<String, Object> params) {
-        if (params == null) {
-            return R.error("params is null please input args");
+        if (params.size() == 0) {
+            return R.error("params is null");
         }
         PageObjects<${className}Entity> page = ${classname}Service.queryPage(params);
         return R.success(page, "page");
@@ -67,70 +64,165 @@ public class ${className}Controller {
 
 
     /**
+     * 查询所有
+     * */
+    @GetMapping("/listAll")
+    @Operation(summary = "查询所有")
+    public R<List<${className}Entity>> listAll() {
+        List<${className}Entity> data = ${classname}Service.queryAll();
+        return R.success(data, "list");
+    }
+
+
+
+    /**
      * 根据id查询
      */
-    @GetMapping("/info/{${pk.attrname}}")
+    @GetMapping("/getOneById/{${pk.attrname}}")
     @Operation(summary = "根据id查询")
-    @Parameter(name = "id", description = "${className}的${pk.attrname}", in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Long.class))
-    public R<${className}Entity> info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
-		${className}Entity ${classname} = ${classname}Service.getById(${pk.attrname});
-
+    @Parameter(name = "id", description = "id of the entity", in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Long.class))
+    public R<${className}Entity> getOneById(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
+        if (${pk.attrname} < 0){
+            return R.error("id is null");
+        }
+		${className}Entity ${classname} = ${classname}Service.queryById(${pk.attrname});
         return R.success(${classname}, "${classname}");
     }
 
+
     /**
-     * 保存
+     * 新增
      */
     @PostMapping("/save")
-    @Operation(summary = "保存")
-    @Parameter(name = "${classname}", description = "${classname}实体", required = true)
-    public R save(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity entity){
-
-        ${classname}Service.save(entity);
-
-        return R.success();
+    @Operation(summary = "新增")
+    public R save(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
+        if (${classname}entity == null){
+            return R.error("${classname}entity must not be null");
+        }
+        boolean flag = ${classname}Service.add(${classname}entity);
+        if (flag) {
+            return R.success("add successfully");
+        }else {
+            return R.error("add failed");
+        }
     }
+
+
+    /**
+     * 批量新增
+     */
+    @PostMapping("/saveList")
+    @Operation(summary = "批量新增")
+    public R saveList(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody List<${className}Entity> data){
+        if (data.size() == 0) {
+            return R.error("data must not be null");
+        }
+        boolean flag = ${classname}Service.addList(data);
+        if (flag) {
+            return R.success("adds successfully");
+        }else {
+            return R.error("adds failed");
+        }
+    }
+
+
 
     /**
      * 修改
      */
     @PostMapping("/update")
     @Operation(summary = "修改")
-    @Parameter(name = "operatorEntity", description = "${classname}实体", required = true)
-    public R update(@Validated({UpdateGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity entity){
-        ${classname}Service.updateById(entity);
-        return R.success();
+    public R update(@Validated({UpdateGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
+        if (${classname}entity == null){
+            return R.error("${classname}entity must not be null");
+        }
+        boolean flag = ${classname}Service.replace(${classname}entity);
+        if (flag){
+            return R.success("update successfully");
+        }else {
+            return R.error("Update failed");
+        }
     }
+
+
+    /**
+     * 批量修改
+     */
+    @PostMapping("/updateList")
+    @Operation(summary = "批量修改")
+    public R updateList(@Validated({UpdateGroup.class, DefaultGroup.class}) @RequestBody List<${className}Entity> data) {
+        if (data.size() == 0) {
+            return R.error("data must not be null");
+        }
+        boolean flag = ${classname}Service.replaceList(data);
+        if (flag){
+            return R.success("updates successfully");
+        }else {
+            return R.error("Updates failed");
+        }
+    }
+
 
     /**
      * 删除
      */
-    @DeleteMapping("/delete")
     @Operation(summary = "删除")
-    @Parameter(name = "${pk.attrname}s", in = ParameterIn.QUERY, description = "${pk.attrname}数组", required = true)
-    public R delete(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}s") List<${pk.attrType}> ${pk.attrname}s){
-        ${classname}Service.removeByIds(${pk.attrname}s);
-        return R.success();
+    @Parameter(name = "id", description = "id数组", required = true, in = ParameterIn.QUERY)
+    @DeleteMapping("/delete")
+    public R delete(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
+        if (id < 0) {
+            return R.error("Delete failed id is null");
+        }
+        boolean delete = ${classname}Service.deleteById(${pk.attrname});
+        if (delete){
+            return R.success("Delete successfully");
+        }else {
+            return R.error("Delete failed");
+        }
     }
 
+
+    /**
+     * 批量删除
+     */
+    @Operation(summary = "删除")
+    @Parameter(name = "${pk.attrname}s", description = "id数组", required = true, in = ParameterIn.QUERY)
+    @DeleteMapping("/deleteList")
+    public R deleteList(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}s") List<${pk.attrType}> ${pk.attrname}s) {
+        if (ids.size() == 0) {
+            return R.error("Delete failed ids is null");
+        }
+        boolean removes = ${classname}Service.deleteByIds(${pk.attrname}s);
+        if (removes){
+            return R.success("Deletes successfully");
+        }else {
+            return R.error("Deletes failed");
+        }
+    }
+
+
+    /**
+     * 导出
+     */
+    @GetMapping("/export")
     @Operation(summary = "导出Excel")
     @Parameters({
             @Parameter(name = "fileName", in = ParameterIn.QUERY, description = "文件名"),
-            @Parameter(name = "sheetName", in = ParameterIn.QUERY, description = "工作表名"),
+            @Parameter(name = "sheetName", in = ParameterIn.QUERY, description = "工作表名")
     })
-    @GetMapping("/export")
-    public void exportTestReport(HttpServletResponse response,
-                                 @RequestParam("params") Map<String, Object> params) {
+    public void export(HttpServletResponse response,
+                                 @RequestParam Map<String, Object> params) throws Exception{
         String fileName = (String) params.get("fileName");
         String sheetName = (String) params.get("sheetName");
         if (!StringUtils.hasText(fileName)) {
             R.error("请输入 fileName 参数");
         }
-        List<${className}Entity> temp = ${classname}Service.listByCondition(params);
-        List<${className}Excel> excels = ClassConvertUtils.sourceToTarget(temp, ${className}Excel.class);
-        EasyExcelUtils<${className}Excel> easyExcel = new EasyExcelUtils<>(${className}Excel.class);
-        easyExcel.exportExcel(response, excels, sheetName, fileName);
+        if (fileName == null) {
+            throw new Exception("File name cannot be null");
+        } else {
+            List<${className}Excel> data = ${classname}Service.queryExcelByConditions();
+            EasyExcelUtils<${className}Excel> easyExcel = new EasyExcelUtils<>(${className}Excel.class);
+            easyExcel.exportExcel(response, data, sheetName, fileName);
+        }
     }
-
-
 }

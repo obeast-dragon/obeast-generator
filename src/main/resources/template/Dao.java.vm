@@ -6,11 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 
 /**
- * ${comments}
- *
  * @author ${author}
- * @email ${email}
- * @date ${datetime}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 @Mapper
 public interface ${className}Dao extends BaseDao<${className}Entity> {
