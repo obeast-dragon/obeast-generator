@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,21 +14,24 @@ import com.worldintek.common.utils.PageQueryUtils;
 
 import ${package}.${moduleName}.dao.${className}Dao;
 import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.excel.${className}Excel;
 import ${package}.${moduleName}.service.${className}Service;
 
+
 /**
- * ${comments}
- *
  * @author ${author}
- * @email ${email}
- * @date ${datetime}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 @Service("${classname}Service")
 public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${className}Entity> implements ${className}Service {
+
+
     @Override
     public PageObjects<${className}Entity> queryPage(Map<String, Object> params) {
         String key = (String) params.get("orderField");
-        QueryWrapper<${className}Entity> queryWrapper = new QueryWrapper<${className}Entity>();
+        QueryWrapper<${className}Entity> queryWrapper = getWrapper();
         IPage<${className}Entity> page = this.page(
                 new PageQueryUtils<${className}Entity>().getPage(params, key, false),
                 queryWrapper
@@ -34,16 +39,82 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
         return new PageQueryUtils<>().getPageObjects(page, ${className}Entity.class);
     }
 
-
     @Override
-    public List<${className}Entity> listByCondition(Map<String, Object> params) {
-        return baseDao.selectList(getWrapper(params));
+    public List<${className}Entity> queryByConditions() {
+        QueryWrapper<${className}Entity> wrapper = getWrapper();
+        return this.list(wrapper);
     }
 
-    private QueryWrapper<${className}Entity> getWrapper(Map<String, Object> params){
-        QueryWrapper<${className}Entity> queryWrapper = new QueryWrapper<${className}Entity>();
-        return queryWrapper;
+    @Override
+    public List<${className}Excel> queryExcelByConditions() {
+        QueryWrapper<${className}Entity> wrapper = getExcelWrapper();
+        return this.list(wrapper).stream().map(item -> {
+            return new StaffExcel();
+        }).collect(Collectors.toList());
+    }
 
+    @Override
+    public List<${className}Entity> queryAll() {
+        return this.list();
+    }
+
+    @Override
+    public ${className}Entity queryById(Long id) {
+        return this.getById(id);
+    }
+
+
+    @Override
+    public boolean add(${className}Entity ${classname}Entity) {
+        return this.save(${classname}Entity);
+    }
+
+
+
+    @Override
+    public boolean addList(List<${className}Entity> data) {
+        return this.saveBatch(data);
+    }
+    @Override
+    public boolean replace(${className}Entity ${classname}Entity) {
+        return this.updateById(${classname}Entity);
+    }
+
+    @Override
+    public boolean replaceList(List<${className}Entity> data) {
+        return this.updateBatchById(data);
+    }
+
+    @Override
+    public boolean deleteById(${pk.attrType} ${pk.attrname}) {
+        return this.removeById(${pk.attrname});
+    }
+
+    @Override
+    public boolean deleteByIds(List<${pk.attrType}> ids) {
+        return this.removeByIds(ids);
+    }
+
+
+    /**
+     * Description: 自定义QueryWrapper
+     * @author ${author}
+     * Date ${datetime}
+     * @return QueryWrapper<${className}Entity>
+     */
+    private QueryWrapper<${className}Entity> getWrapper() {
+        return new QueryWrapper<>();
+    }
+
+
+    /**
+     * Description: 自定义Excel  QueryWrapper
+     * @author ${author}
+     * Date ${datetime}
+     * @return QueryWrapper<${className}Entity>
+     */
+    private QueryWrapper<StaffEntity> getExcelWrapper() {
+        return new QueryWrapper<>();
     }
 
 }

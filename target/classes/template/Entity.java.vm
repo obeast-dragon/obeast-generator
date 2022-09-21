@@ -16,11 +16,10 @@ import lombok.Data;
 
 
 /**
- * ${comments}
- *
  * @author ${author}
- * @email ${email}
- * @date ${datetime}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 @Data
 @TableName("${tableName}")

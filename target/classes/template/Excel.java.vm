@@ -9,11 +9,13 @@ import java.math.BigDecimal;
 #end
 import java.util.Date;
 
+
+
 /**
- * ${comments}
- *
- * @author ${author} ${email}
- * @since ${version} ${date}
+ * @author ${author}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 @Data
 public class ${className}Excel {
@@ -24,9 +26,10 @@ public class ${className}Excel {
      */
     #if($column.columnName == $pk.columnName)
 @ExcelIgnore
-    #end
+    #else
 @ExcelProperty(value = "$!column.comments")
-    private $column.attrType $column.attrname;
+    #end
+private $column.attrType $column.attrname;
 #end
 
 }

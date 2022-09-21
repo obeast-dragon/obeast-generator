@@ -70,11 +70,11 @@ public class ${className}ServiceImpl extends ServiceImpl<${className}Dao, ${clas
     }
 
 
+
     @Override
     public boolean addList(List<${className}Entity> data) {
         return this.saveBatch(data);
     }
-
     @Override
     public boolean replace(${className}Entity ${classname}Entity) {
         return this.updateById(${classname}Entity);

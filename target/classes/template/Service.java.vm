@@ -2,37 +2,127 @@ package ${package}.${moduleName}.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.excel.${className}Excel;
 import ${package}.common.domain.PageObjects;
 
 import java.util.Map;
 import java.util.List;
 
+
 /**
- * ${comments}
- *
  * @author ${author}
- * @email ${email}
- * @date ${datetime}
+ * Date ${datetime}
+ * @version 1.0
+ * Description: ${comments}
  */
 public interface ${className}Service extends IService<${className}Entity> {
 
+
     /**
-     * @description: 分页查询
+     * Description: 分页查询
      * @author ${author}
-     * @date ${datetime}
-     * @param params page args
+     * Date: ${datetime}
+     * @param params 分页参数
      * @return PageObjects<${className}Entity>
-     **/
+     */
     PageObjects<${className}Entity> queryPage(Map<String, Object> params);
 
 
     /**
-     * @description: Excel导出集合
+     * Description: 根据Id查询
      * @author ${author}
-     * @date ${datetime}
-     * @param params page args
+     * Date: ${datetime}
+     * @param ${pk.attrname} ${pk.attrname}  of entity
+     * @return ${className}Entity
+     */
+     ${className}Entity queryById(${pk.attrType} ${pk.attrname});
+
+
+
+    /**
+     * Description: 查询所有
+     * @author ${author}
+     * Date: ${datetime}
      * @return List<${className}Entity>
-     **/
-    List<${className}Entity> listByCondition(Map<String, Object> params);
+     */
+    List<${className}Entity> queryAll();
+
+
+    /**
+     * Description: 根据条件查询
+     * @author ${author}
+     * Date: ${datetime}
+     * @return List<${className}Entity>
+     */
+    List<${className}Entity> queryByConditions();
+
+
+    /**
+     * Description: 根据条件查询Excel
+     * @author ${author}
+     * Date: ${datetime}
+     * @return List<${className}Excel>
+     */
+    List<${className}Excel> queryExcelByConditions();
+
+    /**
+     * Description: 新增
+     * @author ${author}
+     * Date: ${datetime}
+     * @param ${classname}Entity entity object
+     * @return boolean
+     */
+    boolean add(${className}Entity ${classname}Entity);
+
+
+    /**
+     * Description: 批量新增
+     * @author ${author}
+     * Date: ${datetime}
+     * @param data entity objects
+     * @return boolean
+     */
+    boolean addList(List<${className}Entity> data);
+
+
+    /**
+     * Description: 更新
+     * @author ${author}
+     * Date: ${datetime}
+     * @param ${classname}Entity entity object
+     * @return boolean
+     */
+    boolean replace(${className}Entity ${classname}Entity);
+
+
+    /**
+     * Description: 批量更新
+     * @author ${author}
+     * Date: ${datetime}
+     * @param data entity objects
+     * @return boolean
+     */
+    boolean replaceList(List<${className}Entity> data);
+
+
+    /**
+     * Description: 根据Id删除
+     * @author ${author}
+     * Date: ${datetime}
+     * @param ${pk.attrname} ${pk.attrname} of entity
+     * @return boolean
+     */
+    boolean deleteById(${pk.attrType} ${pk.attrname});
+
+
+    /**
+     * Description: 根据Id批量删除
+     * @author ${author}
+     * Date: ${datetime}
+     * @param ids list of ids
+     * @return boolean
+     */
+    boolean deleteByIds(List<${pk.attrType}> ids);
+
 }
 
