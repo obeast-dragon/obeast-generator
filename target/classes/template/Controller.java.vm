@@ -1,13 +1,13 @@
 package ${package}.${moduleName}.controller;
 
-import ${package}.${moduleName}.common.api.R;
-import ${package}.${moduleName}.common.constant.PageConstant;
-import ${package}.${moduleName}.common.domain.PageObjects;
-import ${package}.${moduleName}.common.utils.EasyExcelUtils;
-import ${package}.${moduleName}.common.validation.group.AddGroup;
-import ${package}.${moduleName}.common.validation.group.DefaultGroup;
-import ${package}.${moduleName}.common.validation.group.UpdateGroup;
-import ${package}.${moduleName}.common.validation.group.DeleteGroup;
+import ${package}.common.base.CommonResult;
+import ${package}.common.constant.PageConstant;
+import ${package}.common.domain.PageObjects;
+import ${package}.common.utils.EasyExcelUtils;
+import ${package}.common.validation.group.AddGroup;
+import ${package}.common.validation.group.DefaultGroup;
+import ${package}.common.validation.group.UpdateGroup;
+import ${package}.common.validation.group.DeleteGroup;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletResponse;
  * Description: ${comments}
  */
 @RestController
-@RequestMapping("/${moduleName}/${pathName}")
-@Tag(name = "${comments}接口")
+@RequestMapping("/${pathName}")
+@Tag(name = "${className}接口")
 public class ${className}Controller {
 
     @Autowired
@@ -54,12 +54,12 @@ public class ${className}Controller {
             @Parameter(name = PageConstant.ORDER_FIELD, description = "排序字段", in = ParameterIn.QUERY, schema = @Schema(implementation = String.class)),
             @Parameter(name = PageConstant.ORDER, description = "排序方式，可选值(asc、desc)", in = ParameterIn.QUERY, required = true, schema = @Schema(implementation = String.class))
     })
-    public R<PageObjects<${className}Entity>> list(@RequestParam Map<String, Object> params) {
+    public CommonResult<PageObjects<${className}Entity>> list(@RequestParam Map<String, Object> params) {
         if (params.size() == 0) {
-            return R.error("params is null");
+            return CommonResult.error("params is null");
         }
         PageObjects<${className}Entity> page = ${classname}Service.queryPage(params);
-        return R.success(page, "page");
+        return CommonResult.success(page, "page");
     }
 
 
@@ -68,9 +68,9 @@ public class ${className}Controller {
      * */
     @GetMapping("/listAll")
     @Operation(summary = "查询所有")
-    public R<List<${className}Entity>> listAll() {
+    public CommonResult<List<${className}Entity>> listAll() {
         List<${className}Entity> data = ${classname}Service.queryAll();
-        return R.success(data, "list");
+        return CommonResult.success(data, "list");
     }
 
 
@@ -81,12 +81,12 @@ public class ${className}Controller {
     @GetMapping("/getOneById/{${pk.attrname}}")
     @Operation(summary = "根据id查询")
     @Parameter(name = "id", description = "id of the entity", in = ParameterIn.PATH, required = true, schema = @Schema(implementation = Long.class))
-    public R<${className}Entity> getOneById(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
+    public CommonResult<${className}Entity> getOneById(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
         if (${pk.attrname} < 0){
-            return R.error("id is null");
+            return CommonResult.error("id is null");
         }
 		${className}Entity ${classname} = ${classname}Service.queryById(${pk.attrname});
-        return R.success(${classname}, "${classname}");
+        return CommonResult.success(${classname}, "${classname}");
     }
 
 
@@ -95,15 +95,15 @@ public class ${className}Controller {
      */
     @PostMapping("/save")
     @Operation(summary = "新增")
-    public R save(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
+    public CommonResult<?> save(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
         if (${classname}entity == null){
-            return R.error("${classname}entity must not be null");
+            return CommonResult.error("${classname}entity must not be null");
         }
         boolean flag = ${classname}Service.add(${classname}entity);
         if (flag) {
-            return R.success("add successfully");
+            return CommonResult.success("add successfully");
         }else {
-            return R.error("add failed");
+            return CommonResult.error("add failed");
         }
     }
 
@@ -113,15 +113,15 @@ public class ${className}Controller {
      */
     @PostMapping("/saveList")
     @Operation(summary = "批量新增")
-    public R saveList(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody List<${className}Entity> data){
+    public CommonResult<?> saveList(@Validated({AddGroup.class, DefaultGroup.class}) @RequestBody List<${className}Entity> data){
         if (data.size() == 0) {
-            return R.error("data must not be null");
+            return CommonResult.error("data must not be null");
         }
         boolean flag = ${classname}Service.addList(data);
         if (flag) {
-            return R.success("adds successfully");
+            return CommonResult.success("adds successfully");
         }else {
-            return R.error("adds failed");
+            return CommonResult.error("adds failed");
         }
     }
 
@@ -132,15 +132,15 @@ public class ${className}Controller {
      */
     @PostMapping("/update")
     @Operation(summary = "修改")
-    public R update(@Validated({UpdateGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
+    public CommonResult<?> update(@Validated({UpdateGroup.class, DefaultGroup.class}) @RequestBody ${className}Entity ${classname}entity){
         if (${classname}entity == null){
-            return R.error("${classname}entity must not be null");
+            return CommonResult.error("${classname}entity must not be null");
         }
         boolean flag = ${classname}Service.replace(${classname}entity);
         if (flag){
-            return R.success("update successfully");
+            return CommonResult.success("update successfully");
         }else {
-            return R.error("Update failed");
+            return CommonResult.error("Update failed");
         }
     }
 
@@ -169,15 +169,15 @@ public class ${className}Controller {
     @Operation(summary = "删除")
     @Parameter(name = "id", description = "id数组", required = true, in = ParameterIn.QUERY)
     @DeleteMapping("/delete")
-    public R delete(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
+    public CommonResult<?> delete(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}") ${pk.attrType} ${pk.attrname}) {
         if (id < 0) {
-            return R.error("Delete failed id is null");
+            return CommonResult.error("Delete failed id is null");
         }
         boolean delete = ${classname}Service.deleteById(${pk.attrname});
         if (delete){
-            return R.success("Delete successfully");
+            return CommonResult.success("Delete successfully");
         }else {
-            return R.error("Delete failed");
+            return CommonResult.error("Delete failed");
         }
     }
 
@@ -185,18 +185,18 @@ public class ${className}Controller {
     /**
      * 批量删除
      */
-    @Operation(summary = "删除")
+    @Operation(summary = "批量删除")
     @Parameter(name = "${pk.attrname}s", description = "id数组", required = true, in = ParameterIn.QUERY)
     @DeleteMapping("/deleteList")
-    public R deleteList(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}s") List<${pk.attrType}> ${pk.attrname}s) {
+    public CommonResult<?> deleteList(@Validated({DeleteGroup.class, DefaultGroup.class}) @RequestParam("${pk.attrname}s") List<${pk.attrType}> ${pk.attrname}s) {
         if (ids.size() == 0) {
-            return R.error("Delete failed ids is null");
+            return CommonResult.error("Delete failed ids is null");
         }
         boolean removes = ${classname}Service.deleteByIds(${pk.attrname}s);
         if (removes){
-            return R.success("Deletes successfully");
+            return CommonResult.success("Deletes successfully");
         }else {
-            return R.error("Deletes failed");
+            return CommonResult.error("Deletes failed");
         }
     }
 
@@ -215,11 +215,9 @@ public class ${className}Controller {
         String fileName = (String) params.get("fileName");
         String sheetName = (String) params.get("sheetName");
         if (!StringUtils.hasText(fileName)) {
-            R.error("请输入 fileName 参数");
+            CommonResult.error("请输入 fileName 参数");
         }
-        if (fileName == null) {
-            throw new Exception("File name cannot be null");
-        } else {
+         else {
             List<${className}Excel> data = ${classname}Service.queryExcelByConditions();
             EasyExcelUtils<${className}Excel> easyExcel = new EasyExcelUtils<>(${className}Excel.class);
             easyExcel.exportExcel(response, data, sheetName, fileName);
